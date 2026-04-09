@@ -1,0 +1,57 @@
+### RBAC API - 測試請求
+### 基礎 URL
+@baseUrl = http://localhost:5100
+
+### ────────────────────────────────────────
+### 1. 登入 (Admin / system_admin 角色)
+### ────────────────────────────────────────
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "EMP-0001",
+  "password": "P@ssw0rd"
+}
+
+### ────────────────────────────────────────
+### 2. 登入 (Zander / bento_user 角色)
+### ────────────────────────────────────────
+# @name loginZander
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "EMP-0002",
+  "password": "P@ssw0rd"
+}
+
+### ────────────────────────────────────────
+### 3. 取得 RSA 公鑰 (JWK 格式)
+### ────────────────────────────────────────
+GET {{baseUrl}}/api/auth/public-key
+
+### ────────────────────────────────────────
+### 4. 取得目前使用者資訊 (需要 Bearer Token)
+### 請先執行 Login，複製 accessToken 貼到下方
+### ────────────────────────────────────────
+@token = {{login.response.body.accessToken}}
+
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### ────────────────────────────────────────
+### 5. 測試未帶 Token (應回 401)
+### ────────────────────────────────────────
+GET {{baseUrl}}/api/auth/me
+
+### ────────────────────────────────────────
+### 6. 測試錯誤密碼 (應回 401)
+### ────────────────────────────────────────
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "employeeId": "EMP-0001",
+  "password": "wrongpassword"
+}
