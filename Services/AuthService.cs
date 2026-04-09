@@ -35,7 +35,8 @@ public class AuthService : IAuthService
         {
             AccessToken = accessToken,
             RefreshToken = _jwtService.GenerateRefreshToken(),
-            ExpiresIn = 1800 // 30 minutes
+            ExpiresIn = 1800, // 30 minutes
+            Permissions = permissions,
         };
     }
 }

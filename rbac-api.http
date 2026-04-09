@@ -33,9 +33,9 @@ GET {{baseUrl}}/api/auth/public-key
 
 ### ────────────────────────────────────────
 ### 4. 取得目前使用者資訊 (需要 Bearer Token)
-### 請先執行 Login，複製 accessToken 貼到下方
+### rbac-api 使用 SnakeCaseLower，回應欄位為 access_token
 ### ────────────────────────────────────────
-@token = {{login.response.body.accessToken}}
+@token = {{login.response.body.access_token}}
 
 GET {{baseUrl}}/api/auth/me
 Authorization: Bearer {{token}}

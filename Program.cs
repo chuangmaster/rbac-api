@@ -65,7 +65,11 @@ builder.Services.AddCors(options =>
 });
 
 // ── Controllers ──
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.SnakeCaseLower;
+    });
 
 var app = builder.Build();
 
