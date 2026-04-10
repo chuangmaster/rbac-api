@@ -34,6 +34,29 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// 使用 refresh token 換發新的 access token 與 refresh token
+    /// </summary>
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
+    {
+        var result = await _authService.RefreshAsync(request.RefreshToken);
+        if (result is null)
+            return Unauthorized(new { message = "Refresh token 無效或已過期" });
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// 登出：撤銷 refresh token
+    /// </summary>
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest request)
+    {
+        await _authService.LogoutAsync(request.RefreshToken);
+        return NoContent();
+    }
+
+    /// <summary>
     /// 回傳 RSA 公鑰 (JWK 格式)，外部服務可用此公鑰離線驗證 JWT 簽章
     /// </summary>
     [HttpGet("public-key")]

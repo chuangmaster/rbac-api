@@ -6,6 +6,7 @@ using RbacApi.Repositories;
 using RbacApi.Repositories.Interfaces;
 using RbacApi.Services;
 using RbacApi.Services.Interfaces;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,11 @@ builder.Services.AddSingleton(rsa);
 var rsaPublicOnly = RSA.Create();
 rsaPublicOnly.ImportParameters(rsa.ExportParameters(false));
 
+// ── Redis ──
+var redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(redisConnection));
+
 // ── Infrastructure ──
 builder.Services.AddSingleton<DbConnectionFactory>();
 
@@ -26,6 +32,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // ── Services ──
 builder.Services.AddSingleton<IJwtService>(sp =>
     new JwtService(rsa, builder.Configuration));
+builder.Services.AddSingleton<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // ── JWT Bearer Authentication (RS256) ──
