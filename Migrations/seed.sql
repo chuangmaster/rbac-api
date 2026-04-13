@@ -10,7 +10,8 @@ INSERT INTO permissions (code, description) VALUES
     ('transport:report:export',  '交通模組 - 報表匯出'),
     ('transport:order:delete',   '交通模組 - 訂單刪除'),
     ('bento:portal:access',      '便當模組 - 門戶存取'),
-    ('bento:order:create',       '便當模組 - 建立訂單')
+    ('bento:order:create',       '便當模組 - 建立訂單'),
+    ('announcement:admin',       '公告模組 - 管理（新增/編輯/刪除）')
 ON CONFLICT (code) DO NOTHING;
 
 -- 2. 角色
