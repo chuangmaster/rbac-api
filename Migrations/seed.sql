@@ -10,14 +10,18 @@ INSERT INTO permissions (code, description) VALUES
     ('transport:report:export',  '交通模組 - 報表匯出'),
     ('transport:order:delete',   '交通模組 - 訂單刪除'),
     ('bento:portal:access',      '便當模組 - 門戶存取'),
-    ('bento:order:create',       '便當模組 - 建立訂單')
+    ('bento:order:create',       '便當模組 - 建立訂單'),
+    ('bento:menu:read',          '便當模組 - 瀏覽菜單'),
+    ('bento:menu:write',         '便當模組 - 設定菜單'),
+    ('bento:order:read',         '便當模組 - 瀏覽訂餐統計')
 ON CONFLICT (code) DO NOTHING;
 
 -- 2. 角色
 INSERT INTO roles (name, description) VALUES
     ('system_admin',    '系統管理員 - 擁有全部權限'),
     ('transport_admin', '交通管理員 - 交通模組全部權限'),
-    ('bento_user',      '便當使用者 - 便當模組基本權限')
+    ('bento_user',      '便當使用者 - 便當模組基本權限'),
+    ('bento_admin',     '便當管理員 - 便當模組全部權限（含菜單設定）')
 ON CONFLICT (name) DO NOTHING;
 
 -- 3. 角色-權限對應
@@ -35,11 +39,20 @@ FROM roles r, permissions p
 WHERE r.name = 'transport_admin' AND p.code LIKE 'transport:%'
 ON CONFLICT DO NOTHING;
 
--- bento_user → bento:* 權限
+-- bento_user → 便當瀏覽/訂餐權限 (不含菜單設定)
 INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id
 FROM roles r, permissions p
-WHERE r.name = 'bento_user' AND p.code LIKE 'bento:%'
+WHERE r.name = 'bento_user' AND p.code IN (
+    'bento:portal:access', 'bento:menu:read', 'bento:order:create', 'bento:order:read'
+)
+ON CONFLICT DO NOTHING;
+
+-- bento_admin → bento:* 全部權限
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT r.id, p.id
+FROM roles r, permissions p
+WHERE r.name = 'bento_admin' AND p.code LIKE 'bento:%'
 ON CONFLICT DO NOTHING;
 
 -- 4. 使用者
