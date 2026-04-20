@@ -9,6 +9,7 @@ INSERT INTO permissions (code, description) VALUES
     ('transport:portal:access',  '交通模組 - 一般門戶存取'),
     ('transport:report:export',  '交通模組 - 報表匯出'),
     ('transport:order:delete',   '交通模組 - 訂單刪除'),
+    ('announcement:admin',       '公告模組 - 管理（新增/編輯/刪除）'),
     ('bento:portal:access',      '便當模組 - 門戶存取'),
     ('bento:order:create',       '便當模組 - 建立訂單'),
     ('bento:menu:read',          '便當模組 - 瀏覽菜單'),
